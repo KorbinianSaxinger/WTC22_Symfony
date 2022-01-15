@@ -18,7 +18,7 @@ class CommentType extends AbstractType
             #->add('Author', TextType::class)
             #->add('E-Mail', EmailType::class)
             #->add('Kommentar', TextareaType::class)
-            ->add('Senden', SubmitType::class)
+            #->add('Senden', SubmitType::class)
 
         ;
     }
