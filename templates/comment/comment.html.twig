@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Kommentare{% endblock %}
+
+{% block body %}
+
+    <div>
+        {{ form_start(our_form) }}
+        {{ form_widget(our_form) }}
+        <input type="text" name="author" value="author"/>
+        <input type="text" name="email" value="email"/>
+        <input type="text" name="text" value="Text"/>
+        <!-- <input type="submit" value="Senden" class="btn btn-success"/> -->
+        {{ form_end(our_form) }}
+
+    </div>
+
+
+{% endblock %}
