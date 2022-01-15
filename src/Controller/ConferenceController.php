@@ -33,6 +33,8 @@ class ConferenceController extends AbstractController
         $comment = $repository2->findBy(['conference' => 1],[]);
         dd($conferences,$comment);
 
+
+
         return $this->render('index.html.twig');
     }
     #[Route('/berlin', name: 'berlin')]
