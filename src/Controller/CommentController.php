@@ -23,61 +23,46 @@ class CommentController extends AbstractController
         $this->em = $em;
 
     }
-    #[Route('/berlin-comment', name: 'Comment Berlin')]
-    public function commentB(Request $request, ManagerRegistry $doctrine)
-    {
-        $form = $this->createForm(CommentType::class);
-
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $repository = $this->em->getRepository(Comment::class);
-            $conference = $repository->findOneBy(['conference' => 2]);
-            #$commentData = $form->getData();
-                $entityManager = $doctrine->getManager();
-                $comment = new Comment();
-                $comment->setAuthor($_POST["author"]);
-                $comment->setEmail($_POST["email"]);
-                $comment->setConference($conference->getConference());
-                $comment->setText($_POST["text"]);
-
-                $entityManager->persist($comment);
-                $entityManager->flush();
-            return new Response("Kommentar von ".$comment->getAuthor()." hinzugefügt");
-            #dd($commentData);
-
-        }
-            #dump($request);             //Anzeige Request
-
-       return $this->render('comment/comment.html.twig', [
-           'our_form' => $form->createView()
-       ]);
-    }
-
-    #[Route('/hamburg-comment', name: 'comment Hamburg')]
+    #[Route('/comment', name: 'comment Hamburg')]
     public function comment(Request $request, ManagerRegistry $doctrine)
     {
+
         $form = $this->createForm(CommentType::class);
 
         $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()){
-            $repository = $this->em->getRepository(Comment::class);
-            $conference = $repository->findOneBy(['conference' => 1]);
-            #$commentData = $form->getData();
-            $entityManager = $doctrine->getManager();
-            $comment = new Comment();
-            $comment->setAuthor($_POST["author"]);
-            $comment->setEmail($_POST["email"]);
-            $comment->setConference($conference->getConference());
-            $comment->setText($_POST["text"]);
+        #if($form->isSubmitted() && $form->isValid()){
+        if(isset($_POST['sub'])) {
+            $mail = $_POST['email'];
 
-            $entityManager->persist($comment);
-            $entityManager->flush();
-            return new Response("Kommentar von ".$comment->getAuthor(). " hinzugefügt");
-            #dd($commentData);
+            if(!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
+                echo"<h2>Bitte eine gültige E-mail eingeben.</h2>";
+            } else{
+                    if(isset($_POST["hamburg"])){
+                        $repository = $this->em->getRepository(Comment::class);
+                        $conf = $repository->findOneBy(['conference' => 1]);
+                        $entityManager = $doctrine->getManager();
+                    } elseif(isset($_POST["berlin"])){
+                        $repository = $this->em->getRepository(Comment::class);
+                        $conf = $repository->findOneBy(['conference' => 2]);
+                        $entityManager = $doctrine->getManager();
+                    } else{
+                        $repository = $this->em->getRepository(Comment::class);
+                        $conf = $repository->findOneBy(['conference' => 1]);
+                        $entityManager = $doctrine->getManager();
+                    }
 
-        }
-        #dump($request);             //Anzeige Request
+                    $comment = new Comment();
+                    $comment->setAuthor($_POST["author"]);
+                    $comment->setEmail($_POST["email"]);
+                    $comment->setConference($conf->getConference());
+                    $comment->setText($_POST["text"]);
 
+                    $entityManager->persist($comment);
+                    $entityManager->flush();
+                    return new Response("Kommentar von ".$comment->getAuthor(). " hinzugefüg <br><a href='hamburg'> Hamburg </a><br><a href='berlin'> Berlin </a>");
+
+                }
+            }
         return $this->render('comment/comment.html.twig', [
             'our_form' => $form->createView()
         ]);

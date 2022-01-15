@@ -4,17 +4,48 @@
 
 {% block body %}
 
-    <div>
+
 
         {{ form_start(our_form) }}
         {{ form_widget(our_form) }}
-        <br><input type="text" name="author" value="author"/><br><br>
-        <input type="text" name="email" value="email"/><br><br>
-        <input type="text" id="text" name="text" value="Text"/><br><br>
-
-        {{ form_end(our_form) }}
-
+        <style>
+            #text{
+                width:307px;
+                height: 100px;
+            }
+            #commentForm{
+                text-align: left;
+                margin-left: 50px;
+            }
+            #berlinl {
+                margin-left: 85px;
+                margin-top:-19px;
+            }#hamburgl {
+                margin-left: 3px;
+            }
+             #email{
+                 margin-left: 20px;
+             }
+        </style>
+    <a href='hamburg'> Hamburg </a>
+    <a href='berlin'> Berlin </a>
+    <div id="commentForm">
+        <br><br><br>
+            <p>Konferenz auswählen (wenn beide ja/nein dann Hamburg)</p>
+            <div id="hamburgl">
+                <label for="hamburg">Hamburg</label>
+                <input type="radio" id="hamburg" name="hamburg" value="Hamburg"/>
+            </div>
+            <div id="berlinl">
+                <label for="berlin" id="berlinl">Berlin</label>
+                <input type="radio" id="berlin" name="berlin" value="Berlin"/>
+            </div><br>
+                <input type="text" name="author" value="author"/><input type="text" id="email" name="email" value="email"/>
+            <br><br>
+            <textarea id="text" name="text" rows="10" cols="250">Kommentar max 1.500 Zeichen.
+            </textarea><br>
+            <input type="submit" id="sub" name="sub" value="Senden">
     </div>
 
-
+        {{ form_end(our_form) }}
 {% endblock %}
