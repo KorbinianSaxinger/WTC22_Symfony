@@ -6,6 +6,7 @@ In der DB ist der standard Benutzer (root:root) benutzt worden.
 
 Die DB "wtcsym"(leer)  habe ich hinzugefügt, kann aber auch selber erstellt werden da sie erst durch die Migrationen gefüllt wird.
 
-WICHTIG
-Die Anzeige ist noch sehr hässlich (ganz normale DB ausgabe mit dd()). Aber bevor ich mir um Optik gedanken mache,
-möchte ich eine Eingabe für neue Kommentare schreiben. dies muss ich mir jetzt erst einmal vom WWW beibringen lassen.
+[Update 15.01.2022]
+Das hinzufügen neuer Kommentare geht über /hamburg-comment und /berlin-comment
+
+
