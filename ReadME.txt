@@ -1,6 +1,6 @@
 Dies ist mein Erstes Symfony Projekt. :)
 Es besteht aus den Unterseiten /hamburg, /berlin und /comment die im Conference und CommentController zu finden sind.
-Auf jeder Seite ist der DB-Eintrag von je einer WTC in der jeweiligen Stadt und 2 passenden Kommentaren zu sehen (Werden mehr wenn mehr in DB).
+Auf jeder Seite ist der DB-Eintrag von je einer WTC in der jeweiligen Stadt und 2 passenden Kommentaren zu sehen (Werden mehr wenn mehr in DB oder durch /comment Form hochgeladen werden).
 Die Entitys (Conference und Comment) Sind mit einer OneToMany relation verbunden (Column: Conference_id)
 In der DB ist der standard Benutzer (root:root) benutzt worden.
 
