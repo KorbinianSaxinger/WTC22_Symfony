@@ -16,9 +16,11 @@ use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function Composer\Autoload\includeFile;
 
 class ConferenceController extends AbstractController
 {
+
     private $em;
     public function __construct(EntityManagerInterface $em)
     {
@@ -30,14 +32,28 @@ class ConferenceController extends AbstractController
     public function index(ManagerRegistry $doctrine): Response
     {
         echo"
-            <style>
+<style>
             #commentField{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
+                width:98%;
+                border-style: solid;
+                border-color: dodgerblue;
+                border-radius: 0.8px;
+                margin-top: 5px;
+            }              
+            #addComment{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
+                width:98%;
                 border-style: solid;
                 border-color: dodgerblue;
                 border-radius: 0.8px;
                 margin-top: 5px;
             }            
             #conferenceField{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
                 text-align: center;
                 width: 500px;
                 height: 215px;
@@ -46,49 +62,48 @@ class ConferenceController extends AbstractController
                 border-radius: 0.8px;
                 margin-top: 5px;
             }
-            #confList{
+             #confList{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
+                width: 350px;
+                height: 215px;
+                border-style: solid;
+                border-color: dodgerblue;
+                border-radius: 0.8px;
+                margin-top: -235px;
+                margin-left: 930px; 
+            }
+            #credits{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
+                width: auto;
+                height: 215px;
+                border-style: solid;
+                border-color: dodgerblue;
+                border-radius: 0.8px;
+                margin-top: -235px;
+                margin-left: 1318px; 
+            }
+            #credits > p{
+                margin-top:-20px ;
+            }
+            #comment{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
                 width: 350px;
                 height: 215px;
                 border-style: solid;
                 border-color: dodgerblue;
                 border-radius: 0.8px;
                 margin-top: -234px;
-                margin-left: 950px; 
-            }
-            #credits{
-                width: 310px;
-                height: 215px;
-                border-style: solid;
-                border-color: dodgerblue;
-                border-radius: 0.8px;
-                margin-top: -234px;
-                margin-left: 1350px; 
-            }
-            #comment{
-            width: 350px;
-            height: 215px;
-                border-style: solid;
-                border-color: dodgerblue;
-                border-radius: 0.8px;
-                margin-top: -234px;
-                margin-left: 550px; 
+                margin-left: 540px; 
                 
             }
-            </style>
-        ";
-
-        echo"<a href='berlin'> Berlin </a>";
-        $repository = $this->em->getRepository(Conference::class);
-        $conferences = $repository->find(1);
-        echo"<br>
-                <fieldset id='conferenceField'>
-                <h1>Konferenz: ".$conferences->getCity()."</h1><h2>Jahr: ".$conferences->getYear()."</h2><h3>International: "
-            .$conferences->getInternational()."<h3></h3><br>";
-        echo"</fieldset>";
-
-
-        echo"
-        <style>
+            #wrongMail{        
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            color:rgb(105, 105, 105);
+            text-align: center;
+            }
             #text{
                 width:307px;
                 height: 100px;
@@ -106,7 +121,40 @@ class ConferenceController extends AbstractController
              #email{
                  margin-left: 20px;
              }
-        </style>
+            </style>
+        ";
+
+        #Kommentare Löschen#
+        $repository = $this->em->getRepository(Comment::class);
+        $cnt = $repository->count(['conference' => 1]);
+
+        $repository = $this->em->getRepository(Comment::class);
+        $comment = $repository->findBy(['conference' => 1],[]);
+
+        for($i=0;$i<$cnt;$i++){
+            $getID = $comment[$i]->getId();
+            if(isset($_POST["dl$getID"])){
+                $repository = $this->em->getRepository(Comment::class);
+                $rem = $repository->find($getID);
+                $this->em->remove($rem);
+                $this->em->flush();
+
+            }
+        }
+
+        echo"<fieldset id='conferenceField'>";
+        $repository = $this->em->getRepository(Conference::class);
+        $conferences = $repository->find(1);
+        if($conferences->getInternational()== true){
+            $inter = "Ja";
+        }else{
+            $inter = "Nein";
+        }
+        echo"<h1>Technology Conference:<br>".$conferences->getCity()."</h1><h2>Jahr: ".$conferences->getYear()."</h2><h3>International: ".$inter."<h3></h3><br>";
+        echo"</fieldset>";
+
+
+        echo" 
     <fieldset id='comment'>
     <form method ='POST'>
             </div>
@@ -122,7 +170,6 @@ class ConferenceController extends AbstractController
             
     </fieldset>
         ";
-
 
         echo"
             <fieldset id='confList'>
@@ -149,20 +196,23 @@ class ConferenceController extends AbstractController
         echo"
         <fieldset id='credits'>
         <h3>Aufgabe: Kommentar Seite</h3>
-        <h3>Author: Korbinian Saxinger</h3>
-        <h3>Thanks to:</h3> <p> YoutTube für meine Symfony 'Skills' und meinen Ausbildern die<br> mir HTML,PHP und CSS beigebracht haben</p>
+        <h3>Name: Korbinian Saxinger</h3>
+        <h3>Thanks to:</h3> <p>webconia, besonders Mareike, ohne die ich diese Chance nicht hätte. :)<br> YouTube für meine Symfony 'Skills' <br>und meinen Ausbildern die mir HTML,PHP und CSS beigebracht haben</p>
         </fieldset>
         ";
+
+
+
 
         if(isset($_POST['sub'])) {
             $mail = $_POST['email'];
 
             if(!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-                echo"<h2>Bitte eine gültige E-mail eingeben.</h2>";
+                echo"<h2 id='wrongMail'>Bitte eine gültige E-mail eingeben!</h2>";
             } else{
-                    $repository = $this->em->getRepository(Comment::class);
-                    $conf = $repository->findOneBy(['conference' => 1]);
-                    $entityManager = $doctrine->getManager();
+                $repository = $this->em->getRepository(Comment::class);
+                $conf = $repository->findOneBy(['conference' => 1]);
+                $entityManager = $doctrine->getManager();
 
                 $comment = new Comment();
                 $comment->setAuthor($_POST["author"]);
@@ -172,19 +222,21 @@ class ConferenceController extends AbstractController
 
                 $entityManager->persist($comment);
                 $entityManager->flush();
-                echo"Kommentar von ".$comment->getAuthor(). " hinzugefüg.";
+                echo"<fieldset id='addComment'>Kommentar von ".$comment->getAuthor(). " hinzugefüg.</fieldset>";
 
             }
         }
-
-        $repository2 = $this->em->getRepository(Comment::class);
-        $all = $repository2->count(['conference' => 1]);
-        $comment = $repository2->findBy(['conference' => 1],[]);
+        $repository = $this->em->getRepository(Comment::class);
+        $all = $repository->count(['conference' => 1]);
+        $comment = $repository->findBy(['conference' => 1],[]);
         for($i = 0;$i<$all;$i++){
             $count = $i+1;
+            $getit = $comment[$i]->getId();
             echo"<fieldset id='commentField'>";
             echo"Kommentar " .$count. "<br>Author: ".$comment[$i]->getAuthor()."<br>
-                    E-Mail: ".$comment[$i]->getEmail()."<br>Kommentar:<br>".$comment[$i]->getText()."</fieldset>";
+                    E-Mail: ".$comment[$i]->getEmail()."<br>Kommentar:<br>".$comment[$i]->getText()."
+                   <form method='POST'><input type='submit' id='dl$getit' name='dl$getit' value='Löschen'></form> 
+                    </fieldset>";
 
         }
         return $this->render('index.html.twig');
@@ -198,12 +250,26 @@ class ConferenceController extends AbstractController
         echo"
 <style>
             #commentField{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
+                width:98%;
+                border-style: solid;
+                border-color: dodgerblue;
+                border-radius: 0.8px;
+                margin-top: 5px;
+            }              
+            #addComment{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
+                width:98%;
                 border-style: solid;
                 border-color: dodgerblue;
                 border-radius: 0.8px;
                 margin-top: 5px;
             }            
             #conferenceField{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
                 text-align: center;
                 width: 500px;
                 height: 215px;
@@ -213,45 +279,47 @@ class ConferenceController extends AbstractController
                 margin-top: 5px;
             }
              #confList{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
+                width: 350px;
+                height: 215px;
+                border-style: solid;
+                border-color: dodgerblue;
+                border-radius: 0.8px;
+                margin-top: -235px;
+                margin-left: 930px; 
+            }
+            #credits{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
+                width: auto;
+                height: 215px;
+                border-style: solid;
+                border-color: dodgerblue;
+                border-radius: 0.8px;
+                margin-top: -235px;
+                margin-left: 1318px; 
+            }
+            #credits > p{
+                margin-top:-20px ;
+            }
+            #comment{
+                font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+                color:rgb(105, 105, 105);
                 width: 350px;
                 height: 215px;
                 border-style: solid;
                 border-color: dodgerblue;
                 border-radius: 0.8px;
                 margin-top: -234px;
-                margin-left: 950px; 
-            }
-            #credits{
-                width: 310px;
-                height: 215px;
-                border-style: solid;
-                border-color: dodgerblue;
-                border-radius: 0.8px;
-                margin-top: -234px;
-                margin-left: 1350px; 
-            }
-            #comment{
-            width: 350px;
-            height: 215px;
-                border-style: solid;
-                border-color: dodgerblue;
-                border-radius: 0.8px;
-                margin-top: -234px;
-                margin-left: 550px; 
+                margin-left: 540px; 
                 
             }
-            </style>
-        ";
-
-        echo"<a href='hamburg'> Hamburg </a><fieldset id='conferenceField'>";
-        $repository = $this->em->getRepository(Conference::class);
-        $conferences = $repository->find(2);
-        echo"<h1>Konferenz: ".$conferences->getCity()."</h1><h2>Jahr: ".$conferences->getYear()."</h2><h3>International: ".$conferences->getInternational()."<h3></h3><br>";
-        echo"</fieldset>";
-
-
-        echo"
-        <style>
+            #wrongMail{        
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+            color:rgb(105, 105, 105);
+            text-align: center;
+            }
             #text{
                 width:307px;
                 height: 100px;
@@ -269,8 +337,40 @@ class ConferenceController extends AbstractController
              #email{
                  margin-left: 20px;
              }
-        </style>
-        
+            </style>
+        ";
+
+        #Kommentare Löschen#
+        $repository = $this->em->getRepository(Comment::class);
+        $cnt = $repository->count(['conference' => 2]);
+
+        $repository = $this->em->getRepository(Comment::class);
+        $comment = $repository->findBy(['conference' => 2],[]);
+
+        for($i=0;$i<$cnt;$i++){
+            $getID = $comment[$i]->getId();
+            if(isset($_POST["dl$getID"])){
+                $repository = $this->em->getRepository(Comment::class);
+                $rem = $repository->find($getID);
+                $this->em->remove($rem);
+                $this->em->flush();
+
+            }
+        }
+
+        echo"<fieldset id='conferenceField'>";
+        $repository = $this->em->getRepository(Conference::class);
+        $conferences = $repository->find(2);
+        if($conferences->getInternational()== true){
+            $inter = "Ja";
+        }else{
+            $inter = "Nein";
+        }
+        echo"<h1>Technology Conference:<br>".$conferences->getCity()."</h1><h2>Jahr: ".$conferences->getYear()."</h2><h3>International: ".$inter."<h3></h3><br>";
+        echo"</fieldset>";
+
+
+        echo" 
     <fieldset id='comment'>
     <form method ='POST'>
             </div>
@@ -312,16 +412,19 @@ class ConferenceController extends AbstractController
         echo"
         <fieldset id='credits'>
         <h3>Aufgabe: Kommentar Seite</h3>
-        <h3>Author: Korbinian Saxinger</h3>
-        <h3>Thanks to:</h3> <p> YoutTube für meine Symfony 'Skills' und meinen Ausbildern die<br> mir HTML,PHP und CSS beigebracht haben</p>
+        <h3>Name: Korbinian Saxinger</h3>
+        <h3>Thanks to:</h3> <p>webconia, besonders Mareike, ohne die ich diese Chance nicht hätte. :)<br> YouTube für meine Symfony 'Skills' <br>und meinen Ausbildern die mir HTML,PHP und CSS beigebracht haben</p>
         </fieldset>
         ";
+
+
+
 
         if(isset($_POST['sub'])) {
             $mail = $_POST['email'];
 
             if(!filter_var($mail, FILTER_VALIDATE_EMAIL)) {
-                echo"<h2>Bitte eine gültige E-mail eingeben.</h2>";
+                echo"<h2 id='wrongMail'>Bitte eine gültige E-mail eingeben!</h2>";
             } else{
                 $repository = $this->em->getRepository(Comment::class);
                 $conf = $repository->findOneBy(['conference' => 2]);
@@ -335,18 +438,21 @@ class ConferenceController extends AbstractController
 
                 $entityManager->persist($comment);
                 $entityManager->flush();
-                echo"Kommentar von ".$comment->getAuthor(). " hinzugefüg.";
+                echo"<fieldset id='addComment'>Kommentar von ".$comment->getAuthor(). " hinzugefüg.</fieldset>";
 
             }
         }
-        $repository2 = $this->em->getRepository(Comment::class);
-        $all = $repository2->count(['conference' => 2]);
-        $comment = $repository2->findBy(['conference' => 2],[]);
+        $repository = $this->em->getRepository(Comment::class);
+        $all = $repository->count(['conference' => 2]);
+        $comment = $repository->findBy(['conference' => 2],[]);
         for($i = 0;$i<$all;$i++){
             $count = $i+1;
+            $getit = $comment[$i]->getId();
             echo"<fieldset id='commentField'>";
             echo"Kommentar " .$count. "<br>Author: ".$comment[$i]->getAuthor()."<br>
-                    E-Mail: ".$comment[$i]->getEmail()."<br>Kommentar:<br>".$comment[$i]->getText()."</fieldset>";
+                    E-Mail: ".$comment[$i]->getEmail()."<br>Kommentar:<br>".$comment[$i]->getText()."
+                   <form method='POST'><input type='submit' id='dl$getit' name='dl$getit' value='Löschen'></form> 
+                    </fieldset>";
 
         }
         return $this->render('index.html.twig');
