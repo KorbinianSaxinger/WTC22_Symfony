@@ -10,6 +10,7 @@ Die DB "wtcsym"(leer)  habe ich hinzugefügt, kann aber auch selber erstellt wer
 
 [Update 15.01.2022]
 Alles erledigt!!! 
-Eine der drei Seiten (/hamburg, /berlin, /comment) öffnen und fertig.
+Eine der beiden Seiten (/hamburg, /berlin) öffnen und fertig.
+/comment kann auch noch geöfnet werden, hat aber keinen nutzen mehr
 
 
