@@ -124,7 +124,7 @@ class ConferenceController extends AbstractController
             </style>
         ";
 
-        #Kommentare Löschen#
+        #Kommentare Löschen Funktion#
         $repository = $this->em->getRepository(Comment::class);
         $cnt = $repository->count(['conference' => 1]);
 
@@ -181,8 +181,8 @@ class ConferenceController extends AbstractController
             ->select('count(u.id)')
             ->getQuery()
             ->getSingleScalarResult();
-        $repository3 = $this->em->getRepository(Conference::class);
-        $name = $repository3->findAll();
+        $repository = $this->em->getRepository(Conference::class);
+        $name = $repository->findAll();
         for($i = 0; $i < $cnt; $i++) {
             $stadt = $name[$i]->getCity();
             $link = strtolower($stadt);
@@ -397,8 +397,8 @@ class ConferenceController extends AbstractController
             ->select('count(u.id)')
             ->getQuery()
             ->getSingleScalarResult();
-        $repository3 = $this->em->getRepository(Conference::class);
-        $name = $repository3->findAll();
+        $repository = $this->em->getRepository(Conference::class);
+        $name = $repository->findAll();
         for($i = 0; $i < $cnt; $i++) {
             $stadt = $name[$i]->getCity();
             $link = strtolower($stadt);
