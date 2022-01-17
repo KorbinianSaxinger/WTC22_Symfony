@@ -137,12 +137,18 @@ class ConferenceController extends AbstractController
         for($i = 0;$i<$all;$i++){
             $count = $i+1;
             $getit = $comment[$i]->getId();
-            echo"<fieldset id='commentField'>";
-            echo"Kommentar " .$count. "<br>Author: ".$comment[$i]->getAuthor()."<br>
-                    E-Mail: ".$comment[$i]->getEmail()."<br>Kommentar:<br>".$comment[$i]->getText()."
-                   <form method='POST'><input type='submit' id='dl$getit' name='dl$getit' value='Löschen'></form> 
-                    </fieldset>";
-
+            if($i >= 1) {
+                    echo "<fieldset id='commentField'>";
+                    echo "Kommentar " . $count . "<br>Author: " . $comment[$i]->getAuthor() . "<br>
+                        E-Mail: " . $comment[$i]->getEmail() . "<br>Kommentar:<br>" . $comment[$i]->getText() . "
+                       <form method='POST'><input type='submit' id='dl$getit' name='dl$getit' value='Löschen'></form> 
+                        </fieldset>";
+            } else {
+                echo "<fieldset id='commentField'>";
+                echo "Kommentar " . $count . "<br>Author: " . $comment[$i]->getAuthor() . "<br>
+                        E-Mail: " . $comment[$i]->getEmail() . "<br>Kommentar:<br>" . $comment[$i]->getText() . "
+                        </fieldset>";
+            }
         }
     }
     public function styleSheet(){
@@ -239,6 +245,7 @@ class ConferenceController extends AbstractController
             </style>
         ";
     }
+    
 
     #[Route('/hamburg', name: 'hamburg')]
     public function index(ManagerRegistry $doctrine): Response
